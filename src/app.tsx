@@ -1,23 +1,33 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useStore } from "@builder.io/qwik";
 
 export default component$(() => {
+	const github = useStore({
+		org: "BuilderIO",
+		repos: ["qwik", "partytown"] as string[] | null,
+	});
+
 	return (
 		<main>
 			<p>
 				<label>
-					GitHub organization:
-					<input value="BuilderIO" />
+					GitHub username:
+					<input value={github.org} />
 				</label>
 			</p>
 			<section>
-				<ul>
-					<li>
-						<a href="https://github.com/BuilderIO/qwik">Qwik</a>
-					</li>
-					<li>
-						<a href="https://github.com/BuilderIO/partytown">Partytown</a>
-					</li>
-				</ul>
+				{github.repos ? (
+					<ul>
+						{github.repos.map((repo) => (
+							<li>
+								<a href={`https://github.com/${github.org}/${repo}`}>
+									{github.org}/{repo}
+								</a>
+							</li>
+						))}
+					</ul>
+				) : (
+					"loading..."
+				)}
 			</section>
 		</main>
 	);
